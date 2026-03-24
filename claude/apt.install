@@ -12,3 +12,5 @@ python3
 golang
 nodejs
 npm
+shellcheck
+make
