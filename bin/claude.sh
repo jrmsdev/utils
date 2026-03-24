@@ -6,10 +6,12 @@ user=$(id -u -n)
 workspace="${HOME}/Workspace"
 github="${HOME}/Github"
 temp="${HOME}/Temp"
+utils="${HOME}/Utils"
 
 install -v -d -m 0750 "${workspace}"
 install -v -d -m 0750 "${github}"
 install -v -d -m 0750 "${temp}"
+install -v -d -m 0750 "${utils}"
 
 datadir="${HOME}/Docker/claude"
 install -v -d -m 0750 "${datadir}"
@@ -27,5 +29,6 @@ exec docker run -it --rm -u "${user}" \
 	-v "${workspace}:/home/${user}/workspace" \
 	-v "${github}:/home/${user}/github" \
 	-v "${temp}:/home/${user}/temp" \
+	-v "${utils}:/home/${user}/utils" \
 	--workdir "/home/${user}" \
 	jrmsdev/claude
