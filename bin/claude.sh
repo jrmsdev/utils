@@ -28,4 +28,4 @@ exec docker run -it --rm -u "${user}" \
 	-v "${github}:/home/${user}/github" \
 	-v "${temp}:/home/${user}/temp" \
 	--workdir "/home/${user}" \
-	jcroots/claude
+	jrmsdev/claude

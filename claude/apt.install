@@ -1,0 +1,14 @@
+bash
+bash-completion
+openssl
+ca-certificates
+media-types
+less
+wget
+curl
+sudo
+vim-tiny
+python3
+golang
+nodejs
+npm
