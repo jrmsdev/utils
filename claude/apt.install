@@ -14,3 +14,5 @@ nodejs
 npm
 shellcheck
 make
+git
+jq
