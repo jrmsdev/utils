@@ -1,3 +1,3 @@
-# Personal Utils
+# Utils
 
-My personal utils.
+My personal tools.
