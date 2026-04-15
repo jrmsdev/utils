@@ -1,9 +1,9 @@
-FROM debian:forky-20260316-slim
+FROM debian:forky-20260406-slim
 
 LABEL maintainer="Jeremías <jrmsdev@gmail.com>"
-LABEL version="260325"
+LABEL version="260414"
 
-ENV JRMSDEV_UPGRADE=260325
+ENV JRMSDEV_UPGRADE=260414
 
 USER root:root
 WORKDIR /root
@@ -61,6 +61,8 @@ RUN bash --version
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 RUN /usr/local/bin/uv --version
+
+ENV JRMSDEV_CLAUDE_UPGRADE=260415
 
 RUN install -v -d -m 0750 ${HOME}/.local/npm
 RUN cd ${HOME}/.local/npm && npm install @anthropic-ai/claude-code
