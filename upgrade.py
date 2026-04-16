@@ -15,6 +15,7 @@ import re
 import sys
 import urllib.error
 import urllib.request
+from datetime import date
 from pathlib import Path
 
 WORKSPACE = Path(__file__).parent
@@ -114,12 +115,18 @@ def run_debian_forky():
     print("[debian forky slim]")
     current = read_current(CLAUDE_DOCKERFILE, r"FROM debian:(\S+)")
     latest  = get_latest_debian_forky_slim()
-    return check(
+    changed = check(
         "debian", current, latest,
         CLAUDE_DOCKERFILE,
         r"FROM debian:\S+",
         f"FROM debian:{latest}",
     )
+    if changed:
+        stamp = date.today().strftime("%y%m%d")
+        update_file(CLAUDE_DOCKERFILE, r'LABEL version="\S+"', f'LABEL version="{stamp}"')
+        update_file(CLAUDE_DOCKERFILE, r"ENV JRMSDEV_UPGRADE=\S+", f"ENV JRMSDEV_UPGRADE={stamp}")
+        print(f"  stamp     {stamp}")
+    return changed
 
 
 def run_claude_npm():
