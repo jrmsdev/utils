@@ -4,6 +4,7 @@ upgrade.py - Check and update hardcoded software versions in project files.
 
 Targets:
   - Debian forky slim -> claude/Dockerfile
+  - @anthropic-ai/claude-code npm -> claude/Dockerfile
 
 Usage:
   python3 upgrade.py
@@ -39,6 +40,16 @@ def fetch_json(url, headers=None):
 # ---------------------------------------------------------------------------
 # Version fetchers
 # ---------------------------------------------------------------------------
+
+def get_latest_claude_npm():
+    """Return the latest version of @anthropic-ai/claude-code from the npm registry."""
+    url = "https://registry.npmjs.org/@anthropic-ai/claude-code/latest"
+    data = fetch_json(url)
+    version = data.get("version")
+    if not version:
+        raise RuntimeError("No version field in npm registry response for @anthropic-ai/claude-code")
+    return version
+
 
 def get_latest_debian_forky_slim():
     """Return the latest forky-YYYYMMDD-slim tag from Docker Hub."""
@@ -111,12 +122,25 @@ def run_debian_forky():
     )
 
 
+def run_claude_npm():
+    print("[@anthropic-ai/claude-code]")
+    current = read_current(CLAUDE_DOCKERFILE, r"ENV JRMSDEV_CLAUDE_UPGRADE=(\S+)")
+    latest  = get_latest_claude_npm()
+    return check(
+        "claude-code", current, latest,
+        CLAUDE_DOCKERFILE,
+        r"ENV JRMSDEV_CLAUDE_UPGRADE=\S+",
+        f"ENV JRMSDEV_CLAUDE_UPGRADE={latest}",
+    )
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
 CHECKS = [
     run_debian_forky,
+    run_claude_npm,
 ]
 
 

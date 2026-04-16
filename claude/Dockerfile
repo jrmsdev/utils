@@ -62,7 +62,7 @@ RUN bash --version
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 RUN /usr/local/bin/uv --version
 
-ENV JRMSDEV_CLAUDE_UPGRADE=260415
+ENV JRMSDEV_CLAUDE_UPGRADE=2.1.111
 
 RUN install -v -d -m 0750 ${HOME}/.local/npm
 RUN cd ${HOME}/.local/npm && npm install @anthropic-ai/claude-code
