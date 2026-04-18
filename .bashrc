@@ -1,0 +1,3 @@
+if test -d "${HOME}/Utils/bin"; then
+  export PATH="${HOME}/Utils/bin:${PATH}"
+fi
