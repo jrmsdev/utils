@@ -1,10 +1,19 @@
 .PHONY: all
 all:
-	cd ./claude && ./build.sh
+	@$(MAKE) debian
+	@$(MAKE) claude
+
+.PHONY: debian
+debian:
+	@cd ./debian/forky && ./build.sh
+
+.PHONY: claude
+claude:
+	@cd ./claude && ./build.sh
 
 .PHONY: check
 check:
-	@find . -type f -name '*.sh' | xargs shellcheck
+	@git ls-files | grep -F .sh | xargs shellcheck
 	@python3 -m py_compile upgrade.py && rm -rf __pycache__
 
 .PHONY: prune
