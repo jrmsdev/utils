@@ -11,8 +11,9 @@ install -v -d -m 0750 "${github}"
 install -v -d -m 0750 "${temp}"
 install -v -d -m 0750 "${utils}"
 
-datadir="${HOME}/Docker/claude"
 install -v -d -m 0750 "${HOME}/Docker"
+
+datadir="${HOME}/Docker/claude"
 install -v -d -m 0750 "${datadir}"
 install -v -d -m 0750 "${datadir}/config"
 
