@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# brew
+alias brew="${HOME}/Utils/bin/brew.sh"
