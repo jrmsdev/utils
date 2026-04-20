@@ -59,6 +59,8 @@ ENV HOME=/home/${USER_NAME}
 
 RUN bash --version
 
+RUN git config --global alias.st status
+
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 RUN /usr/local/bin/uv --version
 
