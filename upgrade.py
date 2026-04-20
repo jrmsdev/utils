@@ -3,7 +3,7 @@
 upgrade.py - Check and update hardcoded software versions in project files.
 
 Targets:
-  - Debian forky slim -> claude/Dockerfile
+  - Debian forky slim -> claude/Dockerfile, debian/forky/Dockerfile
   - @anthropic-ai/claude-code npm -> claude/Dockerfile
 
 Usage:
@@ -21,6 +21,7 @@ from pathlib import Path
 WORKSPACE = Path(__file__).parent
 
 CLAUDE_DOCKERFILE = WORKSPACE / "claude/Dockerfile"
+DEBIAN_FORKY_DOCKERFILE = WORKSPACE / "debian/forky/Dockerfile"
 
 
 # ---------------------------------------------------------------------------
@@ -112,7 +113,7 @@ def check(name, current, latest, path, search_pattern, replacement):
 
 
 def run_debian_forky():
-    print("[debian forky slim]")
+    print("[debian forky slim / claude/Dockerfile]")
     current = read_current(CLAUDE_DOCKERFILE, r"FROM debian:(\S+)")
     latest  = get_latest_debian_forky_slim()
     changed = check(
@@ -125,6 +126,24 @@ def run_debian_forky():
         stamp = date.today().strftime("%y%m%d")
         update_file(CLAUDE_DOCKERFILE, r'LABEL version="\S+"', f'LABEL version="{stamp}"')
         update_file(CLAUDE_DOCKERFILE, r"ENV JRMSDEV_UPGRADE=\S+", f"ENV JRMSDEV_UPGRADE={stamp}")
+        print(f"  stamp     {stamp}")
+    return changed
+
+
+def run_debian_forky_base():
+    print("[debian forky slim / debian/forky/Dockerfile]")
+    current = read_current(DEBIAN_FORKY_DOCKERFILE, r"FROM debian:(\S+)")
+    latest  = get_latest_debian_forky_slim()
+    changed = check(
+        "debian", current, latest,
+        DEBIAN_FORKY_DOCKERFILE,
+        r"FROM debian:\S+",
+        f"FROM debian:{latest}",
+    )
+    if changed:
+        stamp = date.today().strftime("%y%m%d")
+        update_file(DEBIAN_FORKY_DOCKERFILE, r'LABEL version="\S+"', f'LABEL version="{stamp}"')
+        update_file(DEBIAN_FORKY_DOCKERFILE, r"ENV JRMSDEV_UPGRADE=\S+", f"ENV JRMSDEV_UPGRADE={stamp}")
         print(f"  stamp     {stamp}")
     return changed
 
@@ -147,6 +166,7 @@ def run_claude_npm():
 
 CHECKS = [
     run_debian_forky,
+    run_debian_forky_base,
     run_claude_npm,
 ]
 
