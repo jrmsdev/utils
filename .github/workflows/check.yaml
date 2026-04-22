@@ -1,0 +1,22 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: "check"
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make Check
+        run: make check
