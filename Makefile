@@ -1,11 +1,19 @@
 .PHONY: all
 all:
+	@$(MAKE) debian-base
+	@$(MAKE) -j2 debian claude
+
+.PHONY: debian-base
+debian-base:
+	@cd ./debian/forky && ./build.sh
+
+.PHONY: debian-all
+debian-all:
+	@$(MAKE) debian-base
 	@$(MAKE) debian
-	@$(MAKE) claude
 
 .PHONY: debian
 debian:
-	@cd ./debian/forky && ./build.sh
 	@cd ./debian/devel && ./build.sh
 
 .PHONY: claude
