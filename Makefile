@@ -6,6 +6,7 @@ all:
 .PHONY: debian
 debian:
 	@cd ./debian/forky && ./build.sh
+	@cd ./debian/devel && ./build.sh
 
 .PHONY: claude
 claude:
@@ -14,8 +15,13 @@ claude:
 .PHONY: check
 check:
 	@git ls-files | grep -F .sh | xargs shellcheck
-	@python3 -m py_compile upgrade.py bin/claude.py && rm -rf __pycache__
+	@python3 -m py_compile upgrade.py bin/claude.py \
+		&& rm -rf __pycache__ bin/__pycache__
+
+.PHONY: clean
+clean:
+	@rm -rf __pycache__ bin/__pycache__
 
 .PHONY: prune
-prune:
+prune: clean
 	@docker system prune --force

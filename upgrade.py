@@ -3,7 +3,7 @@
 upgrade.py - Check and update hardcoded software versions in project files.
 
 Targets:
-  - Debian forky slim -> claude/Dockerfile, debian/forky/Dockerfile
+  - Debian forky slim -> claude/Dockerfile, debian/forky/Dockerfile, debian/devel/Dockerfile
   - @anthropic-ai/claude-code npm -> claude/Dockerfile
 
 Usage:
@@ -22,6 +22,7 @@ WORKSPACE = Path(__file__).parent
 
 CLAUDE_DOCKERFILE = WORKSPACE / "claude/Dockerfile"
 DEBIAN_FORKY_DOCKERFILE = WORKSPACE / "debian/forky/Dockerfile"
+DEBIAN_DEVEL_DOCKERFILE = WORKSPACE / "debian/devel/Dockerfile"
 
 
 # ---------------------------------------------------------------------------
@@ -148,6 +149,22 @@ def run_debian_forky_base():
     return changed
 
 
+def run_debian_devel():
+    print("[debian/devel/Dockerfile <- debian/forky/Dockerfile]")
+    forky_stamp = read_current(DEBIAN_FORKY_DOCKERFILE, r'LABEL version="(\S+)"')
+    devel_stamp = read_current(DEBIAN_DEVEL_DOCKERFILE, r'LABEL version="(\S+)"')
+    changed = check(
+        "devel", devel_stamp, forky_stamp,
+        DEBIAN_DEVEL_DOCKERFILE,
+        r'LABEL version="\S+"',
+        f'LABEL version="{forky_stamp}"',
+    )
+    if changed:
+        update_file(DEBIAN_DEVEL_DOCKERFILE, r"ENV JRMSDEV_UPGRADE=\S+", f"ENV JRMSDEV_UPGRADE={forky_stamp}")
+        print(f"  stamp     {forky_stamp}")
+    return changed
+
+
 def run_claude_npm():
     print("[@anthropic-ai/claude-code]")
     current = read_current(CLAUDE_DOCKERFILE, r"ENV JRMSDEV_CLAUDE_UPGRADE=(\S+)")
@@ -167,6 +184,7 @@ def run_claude_npm():
 CHECKS = [
     run_debian_forky,
     run_debian_forky_base,
+    run_debian_devel,
     run_claude_npm,
 ]
 
