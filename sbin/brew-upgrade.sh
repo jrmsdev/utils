@@ -4,4 +4,4 @@ brew="${HOME}/Utils/bin/brew.sh"
 set -x
 $brew update
 $brew outdated --greedy
-$brew upgrade --greedy
+$brew upgrade --greedy --yes
