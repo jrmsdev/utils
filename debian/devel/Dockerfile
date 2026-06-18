@@ -1,9 +1,9 @@
 FROM jrmsdev/debian-forky:latest
 
 LABEL maintainer="Jeremías <jrmsdev@gmail.com>"
-LABEL version="260604"
+LABEL version="260618"
 
-ENV JRMSDEV_UPGRADE=260604
+ENV JRMSDEV_UPGRADE=260618
 
 USER root:root
 WORKDIR /root
@@ -24,6 +24,8 @@ RUN apt-get clean \
 		/var/cache/apt/archives/*.deb \
 		/var/cache/apt/*cache.bin \
 		/tmp/apt.install
+
+ARG USER_NAME=jrms
 
 USER ${USER_NAME}:${USER_NAME}
 WORKDIR /home/${USER_NAME}
