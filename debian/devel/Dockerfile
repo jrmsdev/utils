@@ -1,9 +1,9 @@
 FROM jrmsdev/debian-forky:latest
 
 LABEL maintainer="Jeremías <jrmsdev@gmail.com>"
-LABEL version="260618"
+LABEL version="260629"
 
-ENV JRMSDEV_UPGRADE=260618
+ENV JRMSDEV_UPGRADE=260629
 
 USER root:root
 WORKDIR /root
