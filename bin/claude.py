@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import os
 import subprocess
 import sys
@@ -20,6 +21,14 @@ def container_path(host_path, home, container_home):
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Run the claude container.')
+    parser.add_argument(
+        '--config', action='store_true',
+        help='print the docker mounts/volumes needed for claude internal '
+             'files, then exit without running the container',
+    )
+    args = parser.parse_args()
+
     user = subprocess.check_output(['id', '-u', '-n']).decode().strip()
     home = os.path.expanduser('~')
     pwd = os.environ.get('PWD', os.getcwd())
@@ -45,6 +54,12 @@ def main():
         f'{claude_json}:{container_home}/.claude.json',
     ]
 
+    if args.config:
+        print('claude internal files mounts:')
+        for m in mounts:
+            print(f'  -v {m}')
+        return
+
     entrypoint = '/usr/local/bin/user-login.sh'
 
     if pwd == home:
@@ -63,9 +78,10 @@ def main():
             f'{temp}:{container_home}/temp',
         ]
         workdir = c_pwd
-        if not (workdir == github or pwd.startswith(github + os.sep)):
-            sys.exit(f'error: workdir {pwd!r} must be under $HOME/Github ({github!r})')
         entrypoint = '/usr/local/bin/claude'
+
+    if pwd != home and not (workdir == github or pwd.startswith(github + os.sep)):
+        sys.exit(f'error: workdir {pwd!r} must be under $HOME/Github ({github!r})')
 
     vol_args = []
     for m in mounts:
