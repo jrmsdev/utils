@@ -5,5 +5,5 @@ exec docker run -it --rm -u "${user}" \
     --name "claude-devel" \
     --hostname claude-devel.debian.local \
     -e "TERM=${TERM}" \
-	-v "${HOME}/Utils:/home/${user}/utils" \
+    -v "${HOME}/Utils:/home/${user}/utils" \
     jrmsdev/claude
