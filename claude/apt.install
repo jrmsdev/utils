@@ -9,7 +9,7 @@ curl
 sudo
 vim-tiny
 python3
-python3-pip
+python3-venv
 golang
 nodejs
 npm
