@@ -32,4 +32,5 @@ clean:
 
 .PHONY: prune
 prune: clean
-	@docker system prune --force
+	@podman system prune --force
+	@podman ps --external -q | xargs -I{} podman rm {}
