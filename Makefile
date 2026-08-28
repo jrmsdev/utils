@@ -1,3 +1,5 @@
+PY_COMPILE := upgrade.py bin/claude.py
+
 .PHONY: all
 all:
 	@$(MAKE) debian-base
@@ -22,8 +24,8 @@ claude:
 
 .PHONY: check
 check:
-	@git ls-files | grep -F .sh | xargs shellcheck
-	@python3 -m py_compile upgrade.py bin/claude.py \
+	@git ls-files '*.sh' | xargs shellcheck
+	@python3 -m py_compile $(PY_COMPILE) \
 		&& rm -rf __pycache__ bin/__pycache__
 
 .PHONY: clean

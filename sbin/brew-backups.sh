@@ -12,5 +12,5 @@ mkdir -vp "${bups}"
 set -x
 $brew config | tee "${bups}/brew.config"
 $brew list --installed-on-request | tee "${bups}/brew.install"
-$brew list --cask | tee -a "${bups}/brew.install"
+$brew list --cask | tee "${bups}/brew.install-cask"
 $brew bundle dump --file "${bups}/Brewfile"
