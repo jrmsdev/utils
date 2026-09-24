@@ -4,7 +4,7 @@ upgrade.py - Check and update hardcoded software versions in project files.
 
 Targets:
   - Debian forky slim -> claude/Dockerfile, debian/forky/Dockerfile, debian/devel/Dockerfile
-  - @anthropic-ai/claude-code npm -> claude/Dockerfile
+  - Claude Code latest release (downloads.claude.ai) -> claude/Dockerfile
 
 Usage:
   python3 upgrade.py
@@ -29,28 +29,31 @@ DEBIAN_DEVEL_DOCKERFILE = WORKSPACE / "debian/devel/Dockerfile"
 # HTTP helpers
 # ---------------------------------------------------------------------------
 
-def fetch_json(url, headers=None):
+def fetch(url, headers=None):
     req = urllib.request.Request(url, headers=headers or {})
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
-            return json.loads(resp.read())
+            return resp.read()
     except urllib.error.HTTPError as e:
         raise RuntimeError(f"HTTP {e.code} fetching {url}") from e
     except urllib.error.URLError as e:
         raise RuntimeError(f"Network error fetching {url}: {e.reason}") from e
 
 
+def fetch_json(url, headers=None):
+    return json.loads(fetch(url, headers))
+
+
 # ---------------------------------------------------------------------------
 # Version fetchers
 # ---------------------------------------------------------------------------
 
-def get_latest_claude_npm():
-    """Return the latest version of @anthropic-ai/claude-code from the npm registry."""
-    url = "https://registry.npmjs.org/@anthropic-ai/claude-code/latest"
-    data = fetch_json(url)
-    version = data.get("version")
-    if not version:
-        raise RuntimeError("No version field in npm registry response for @anthropic-ai/claude-code")
+def get_latest_claude():
+    """Return the latest Claude Code version from the official releases bucket."""
+    url = "https://downloads.claude.ai/claude-code-releases/latest"
+    version = fetch(url).decode().strip()
+    if not re.fullmatch(r"\d+\.\d+\.\d+", version):
+        raise RuntimeError(f"Unexpected version {version!r} from {url}")
     return version
 
 
@@ -165,10 +168,10 @@ def run_debian_devel():
     return changed
 
 
-def run_claude_npm():
-    print("[@anthropic-ai/claude-code]")
+def run_claude():
+    print("[claude-code]")
     current = read_current(CLAUDE_DOCKERFILE, r"ENV JRMSDEV_CLAUDE_UPGRADE=(\S+)")
-    latest  = get_latest_claude_npm()
+    latest  = get_latest_claude()
     return check(
         "claude-code", current, latest,
         CLAUDE_DOCKERFILE,
@@ -185,7 +188,7 @@ CHECKS = [
     run_debian_forky,
     run_debian_forky_base,
     run_debian_devel,
-    run_claude_npm,
+    run_claude,
 ]
 
 
