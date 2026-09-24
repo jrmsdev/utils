@@ -1,9 +1,9 @@
-FROM debian:forky-20260824-slim
+FROM debian:forky-20260918-slim
 
 LABEL maintainer="Jeremías <jrmsdev@gmail.com>"
-LABEL version="260826"
+LABEL version="260924"
 
-ENV JRMSDEV_UPGRADE=260826
+ENV JRMSDEV_UPGRADE=260924
 
 USER root:root
 WORKDIR /root
@@ -46,10 +46,7 @@ RUN chmod -v 0440 "/etc/sudoers.d/${USER_NAME}"
 COPY user-login.sh /usr/local/bin/user-login.sh
 RUN chmod -v 0755 /usr/local/bin/user-login.sh
 
-RUN ln -vsf /home/${USER_NAME}/.local/bin/uvx /usr/local/bin/uvx \
-	&& ln -vsf /home/${USER_NAME}/.local/bin/uv /usr/local/bin/uv
-
-RUN ln -vsf /home/${USER_NAME}/.local/npm/node_modules/.bin/claude /usr/local/bin/claude
+RUN ln -vsf /home/${USER_NAME}/.local/bin/claude /usr/local/bin/claude
 
 USER ${USER_NAME}:${USER_NAME}
 WORKDIR /home/${USER_NAME}
@@ -61,13 +58,9 @@ RUN bash --version
 
 RUN git config --global alias.st status
 
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-RUN /usr/local/bin/uv --version
+ENV JRMSDEV_CLAUDE_UPGRADE=2.1.281
 
-ENV JRMSDEV_CLAUDE_UPGRADE=2.1.252
-
-RUN install -v -d -m 0750 ${HOME}/.local/npm
-RUN cd ${HOME}/.local/npm && npm install @anthropic-ai/claude-code
+RUN curl -fsSL https://claude.ai/install.sh | bash
 
 RUN /usr/local/bin/claude --version
 
