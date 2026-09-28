@@ -58,7 +58,7 @@ RUN bash --version
 
 RUN git config --global alias.st status
 
-ENV JRMSDEV_CLAUDE_UPGRADE=2.1.281
+ENV JRMSDEV_CLAUDE_UPGRADE=2.1.284
 
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
