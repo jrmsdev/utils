@@ -1,9 +1,9 @@
-FROM debian:forky-20260918-slim
+FROM debian:forky-20261005-slim
 
 LABEL maintainer="Jeremías <jrmsdev@gmail.com>"
-LABEL version="260924"
+LABEL version="261013"
 
-ENV JRMSDEV_UPGRADE=260924
+ENV JRMSDEV_UPGRADE=261013
 
 USER root:root
 WORKDIR /root
@@ -58,7 +58,7 @@ RUN bash --version
 
 RUN git config --global alias.st status
 
-ENV JRMSDEV_CLAUDE_UPGRADE=2.1.284
+ENV JRMSDEV_CLAUDE_UPGRADE=2.1.296
 
 RUN curl -fsSL https://claude.ai/install.sh | bash
 
